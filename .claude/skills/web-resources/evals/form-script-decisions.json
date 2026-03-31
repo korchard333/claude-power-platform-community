@@ -1,0 +1,34 @@
+{
+  "skill_name": "web-resources",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "When a user selects 'High Priority' on a case form, we need to make the 'Escalation Reason' field required and show a warning banner. How do we implement this?",
+      "expected_output": "Agent uses a form script with formContext to set required level and show a form notification, registered on the OnChange event of the priority field.",
+      "files": [],
+      "expectations": [
+        "Agent uses formContext.getAttribute('priority').addOnChange() or registers the handler on the OnChange event of the priority field",
+        "Agent uses formContext.getAttribute('escalationreason').setRequiredLevel('required') to make the field mandatory",
+        "Agent uses formContext.ui.setFormNotification() to display a warning banner on the form",
+        "Agent passes the execution context as the first parameter to the event handler function",
+        "Agent uses getFormContext() from the execution context (not deprecated Xrm.Page)",
+        "Agent does NOT use direct DOM manipulation or jQuery to modify the form (unsupported)",
+        "Agent may include logic to remove the required level and clear the notification when priority changes away from High"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need a custom ribbon button that opens a dialog showing related records. How should we implement this?",
+      "expected_output": "Agent uses command bar customization with a command handler that calls Xrm.Navigation.navigateTo() for the dialog, and discusses modern commanding vs classic ribbon XML.",
+      "files": [],
+      "expectations": [
+        "Agent recommends using Xrm.Navigation.navigateTo() to open a dialog (side pane or modal) showing related records",
+        "Agent discusses modern commanding (Power Fx-based) as the preferred approach for new command bar buttons",
+        "Agent mentions classic RibbonDiffXml as an alternative for complex scenarios that modern commanding doesn't support",
+        "Agent defines enable rules and display rules to control when the button is visible and clickable",
+        "Agent passes the selected record context (primary entity ID) to the command handler",
+        "Agent does NOT recommend using window.open or unsupported DOM methods to create dialogs"
+      ]
+    }
+  ]
+}

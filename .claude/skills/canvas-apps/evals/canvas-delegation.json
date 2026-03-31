@@ -1,0 +1,33 @@
+{
+  "skill_name": "canvas-delegation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a gallery showing contacts from Dataverse. There are about 10,000 contacts. I want to filter the gallery by a computed column that concatenates first name and last name. How should I set this up?",
+      "expected_output": "The agent warns about delegation limits. Filtering by a computed/calculated column is non-delegable in Canvas Apps. With 10,000 records and a default delegation limit of 500 (max 2000), only a subset of records will be evaluated client-side, producing incomplete results. The agent suggests alternatives: use a Dataverse view with server-side filtering, use StartsWith on individual name columns (delegable), or create a server-side calculated/formula column in Dataverse and filter on that instead.",
+      "files": [],
+      "expectations": [
+        "Agent identifies that filtering by a computed column is non-delegable",
+        "Agent mentions the delegation limit (500 default, 2000 max) and that only a subset of 10,000 records would be evaluated",
+        "Agent warns that results will be incomplete/incorrect with this approach",
+        "Agent suggests StartsWith on firstname or lastname as a delegable alternative",
+        "Agent suggests creating a server-side calculated or formula column in Dataverse as another alternative",
+        "Agent may suggest using a Dataverse view to pre-filter records server-side"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to search contacts by full name using the 'in' operator in my Canvas App. Something like Filter(Contacts, fullname in ['John Smith', 'Jane Doe']). Will this work with 10,000 records?",
+      "expected_output": "The agent identifies that the 'in' operator is non-delegable against Dataverse in Canvas Apps. With 10,000 records, this filter will only evaluate against the first 500 (or 2000) records loaded client-side, missing matches beyond that limit. The agent recommends StartsWith (delegable) for single-value searches, or using a Dataverse view/FetchXML for exact multi-value matching, or implementing a search screen with Dataverse Search for full-text search capabilities.",
+      "files": [],
+      "expectations": [
+        "Agent identifies that the 'in' operator is not delegable against Dataverse",
+        "Agent explains the delegation limit impact on 10,000 records",
+        "Agent recommends StartsWith as a delegable alternative for single-value filtering",
+        "Agent does NOT recommend Contains or Search function (also non-delegable on Dataverse for most column types)",
+        "Agent may suggest Dataverse Search or a server-side approach for multi-value matching",
+        "Agent explains that only StartsWith, =, <>, <, >, <=, >= are delegable filter operators for Dataverse text columns"
+      ]
+    }
+  ]
+}

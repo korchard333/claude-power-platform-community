@@ -1,0 +1,48 @@
+{
+  "skill_name": "security",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our project management app has projects, tasks, and budget data. Managers should see their team's data, admins see everything, standard users see only their own records. Budget information should be hidden from standard users.",
+      "expected_output": "Agent designs a security model with 3 roles, uses business units for team isolation, and column security for budget fields.",
+      "files": [],
+      "expectations": [
+        "Creates 3 distinct security roles (Admin, Manager, User)",
+        "Admin role has Organization-level access",
+        "Manager role has Business Unit-level access",
+        "User role has User-level (own records) access",
+        "Budget column uses Column Security Profile, not just role-level hiding",
+        "Recommends testing as each role to verify boundaries"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have two departments -- Sales and Support. Users in Sales Business Unit should not be able to see records owned by users in the Support Business Unit, and vice versa. Both departments use the same case management tables. How should we set up security?",
+      "expected_output": "Agent designs a BU hierarchy with separate business units for Sales and Support. Each BU has its own security role instance with Business Unit-level access. Users are assigned to their respective BU. Records are automatically scoped by the owning user's BU. No cross-BU visibility unless explicitly granted.",
+      "files": [],
+      "expectations": [
+        "Agent creates separate Business Units for Sales and Support",
+        "Agent uses BU hierarchy (both under root BU) for organizational structure",
+        "Agent assigns security roles at Business Unit level (not Organization level)",
+        "Agent explains that record ownership determines visibility -- records owned by Sales users are invisible to Support users",
+        "Agent does NOT recommend row-level security or sharing as the primary mechanism (BU isolation is the correct approach here)",
+        "Agent may mention that a shared records pattern (manual sharing or team sharing) can be used for exceptions where cross-BU visibility is needed"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We have an HR application where the SSN (Social Security Number) column on the employee table should only be visible to users with the HR Manager role. Regular HR staff can see other employee details but not SSN. How should we implement this?",
+      "expected_output": "Agent designs column-level security using a Column Security Profile. The SSN column is marked as secured. A Column Security Profile named 'HR Manager - SSN Access' is created with Read permission on the SSN column. This profile is assigned to users with the HR Manager role. Regular HR staff see all other columns but the SSN column shows '******' or is hidden.",
+      "files": [],
+      "expectations": [
+        "Agent uses Column Security Profile (not row-level security) to protect the SSN column",
+        "Agent does NOT recommend hiding the column via form script or security role (these are bypassable via API)",
+        "Agent marks the SSN column as 'secured' (IsSecured = true) on the column definition",
+        "Agent creates a Column Security Profile with Read permission for the SSN column",
+        "Agent assigns the profile to HR Manager users/team",
+        "Agent explains that users without the profile will see the column as masked/hidden even via API",
+        "Agent may mention that Column Security is enforced at the platform level -- it works regardless of access method (form, view, API, export)"
+      ]
+    }
+  ]
+}

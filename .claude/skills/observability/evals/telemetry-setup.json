@@ -1,0 +1,36 @@
+{
+  "skill_name": "observability",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our Code App is slow in production but we have no visibility. How do we set up monitoring?",
+      "expected_output": "Agent recommends Application Insights integration for the Code App, including custom telemetry in the hooks layer, performance marks, and user session tracking.",
+      "files": [],
+      "expectations": [
+        "Agent recommends integrating Application Insights using the @microsoft/applicationinsights-web SDK",
+        "Agent specifies using a connection string (not instrumentation key, which is deprecated)",
+        "Agent recommends custom telemetry events in the hooks layer (e.g., data fetch durations, user actions)",
+        "Agent recommends performance marks to measure component render times and data load times",
+        "Agent recommends enabling Managed Environments on the production environment for platform-level telemetry export",
+        "Agent suggests one Application Insights instance per environment (not shared across environments)",
+        "Agent may recommend React error boundaries integrated with App Insights for unhandled error tracking",
+        "Agent may suggest creating alert rules for slow response times or error rate spikes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Cloud flows are failing intermittently and we only find out when users complain. How do we set up proactive monitoring?",
+      "expected_output": "Agent recommends Power Automate analytics, a custom error notification flow, Application Insights for critical flows, and an alerting dashboard.",
+      "files": [],
+      "expectations": [
+        "Agent recommends the Automation Center dashboard for centralized flow monitoring",
+        "Agent recommends enabling Application Insights export via Managed Environments for flow telemetry",
+        "Agent suggests creating a dedicated error notification flow that triggers on flow failures and sends alerts (e.g., Teams notification or email)",
+        "Agent recommends configuring alert rules in Application Insights for failure rate thresholds",
+        "Agent may suggest building a monitoring dashboard (Azure Dashboard or Power BI) for flow health visibility",
+        "Agent does NOT recommend relying solely on users reporting failures as a monitoring strategy",
+        "Agent may mention KQL queries for analyzing flow failure patterns in Application Insights"
+      ]
+    }
+  ]
+}

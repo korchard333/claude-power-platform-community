@@ -1,0 +1,18 @@
+{
+  "skill_name": "dataverse-web-api",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to authenticate to the Dataverse Web API from my terminal to create some tables.",
+      "expected_output": "Agent provides Azure CLI authentication method. Does NOT suggest 'pac auth token' (which doesn't exist).",
+      "files": [],
+      "expectations": [
+        "Uses az account get-access-token command",
+        "Specifies --resource parameter with the org URL",
+        "Does NOT mention 'pac auth token'",
+        "Mentions --tenant parameter for multi-tenant scenarios",
+        "On Windows, suggests PowerShell for subsequent Web API calls"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(wc *)",
+      "Bash(ls *)",
+      "Bash(pac *)",
+      "Bash(az account get-access-token*)",
+      "Bash(npm run *)",
+      "Bash(npx markdownlint-cli2*)",
+      "mcp__microsoft-docs__microsoft_docs_search",
+      "mcp__microsoft-docs__microsoft_docs_fetch",
+      "mcp__microsoft-docs__microsoft_code_sample_search"
+    ]
+  },
+  "mcpServers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}

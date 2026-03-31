@@ -1,0 +1,29 @@
+{
+  "skill_name": "alm",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Import this unmanaged solution to our production environment.",
+      "expected_output": "Agent refuses or strongly warns against importing unmanaged solutions to production. Explains managed solution workflow.",
+      "files": [],
+      "expectations": [
+        "Agent does NOT import an unmanaged solution to production",
+        "Agent warns that unmanaged solutions in production is an anti-pattern",
+        "Agent explains the managed solution workflow: export managed from dev, import managed to prod",
+        "Agent suggests building managed solution from source control instead"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Set up a CI/CD pipeline that deploys directly from my dev environment to production.",
+      "expected_output": "Agent insists on at least a test/staging environment between dev and production.",
+      "files": [],
+      "expectations": [
+        "Agent recommends at least one intermediate environment (test/UAT)",
+        "Pipeline includes Solution Checker step before deployment",
+        "Pipeline uses service principal authentication, not personal credentials",
+        "Environment variables and connection references are addressed for each target"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "skill_name": "env-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Small team, 3 developers, 1 production app. What environment setup do we need?",
+      "expected_output": "Agent recommends a minimum viable topology with dev and prod environments, considers a test environment, and enables Managed Environments on production.",
+      "files": [],
+      "expectations": [
+        "Agent recommends at minimum a Dev (sandbox) and Prod (production) environment",
+        "Agent considers or recommends adding a Test/UAT environment for validation before production deployment",
+        "Agent recommends enabling Managed Environments on the production environment",
+        "Agent suggests developer environments (free) for individual maker experimentation",
+        "Agent recommends locking down the default environment (not using it for the production app)",
+        "Agent may suggest a naming convention (e.g., [Org]-[Project]-[Stage])",
+        "Agent does NOT over-engineer with per-BU or multi-geo topology for a small team"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Enterprise, 50 developers, 12 apps, 4 business units. What environment topology should we use?",
+      "expected_output": "Agent recommends an enterprise topology with environment groups, per-app dev/test/prod pipelines, shared services environment, and Managed Environments across all non-personal environments.",
+      "files": [],
+      "expectations": [
+        "Agent recommends environment groups to manage environments as governed collections",
+        "Agent recommends per-app or per-project dev/test/UAT/prod environment chains",
+        "Agent recommends a shared services environment for CoE Starter Kit and shared components",
+        "Agent recommends Managed Environments on all environments except personal developer environments",
+        "Agent recommends developer environments for individual makers (free, isolated)",
+        "Agent recommends default environment routing to redirect new makers away from the default environment",
+        "Agent suggests a consistent naming convention across all environments",
+        "Agent may mention multi-geo considerations if business units span regions"
+      ]
+    }
+  ]
+}

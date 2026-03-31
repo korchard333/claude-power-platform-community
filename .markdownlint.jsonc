@@ -1,0 +1,10 @@
+{
+  // Tuned to pass on existing content
+  "MD013": false,          // Line length — skills have long lines
+  "MD033": false,          // Inline HTML — used in some skills
+  "MD024": false,          // Duplicate headings — repeated across sections
+  "MD041": false,          // First line heading — frontmatter files
+  "MD040": false,          // Fenced code language — some blocks are pseudo-code
+  "MD046": false,          // Code block style — mixed styles OK
+  "MD025": false           // Single H1 — some files have multiple top-level sections
+}

@@ -1,0 +1,45 @@
+{
+  "skill_name": "dataverse-web-api",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a custom table called 'Project' with a primary name column, a priority choice column (Low/Medium/High), and a lookup to Account. Put it in the 'ContosoProjects' solution.",
+      "expected_output": "Agent creates the table via EntityDefinitions POST with MSCRM.SolutionUniqueName header set to 'ContosoProjects'. Includes @odata.type on all attribute metadata. Creates relationship via RelationshipDefinitions. Calls PublishXml after.",
+      "files": [],
+      "expectations": [
+        "Every POST to EntityDefinitions includes header MSCRM.SolutionUniqueName: ContosoProjects",
+        "Table creation payload includes a StringAttributeMetadata with IsPrimaryName: true",
+        "Choice column uses @odata.type: Microsoft.Dynamics.CRM.PicklistAttributeMetadata",
+        "Lookup is created via OneToManyRelationshipMetadata with CascadeConfiguration",
+        "PublishXml is called after form/view creation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create 3 tables for a project management system: Project, Task, and Milestone. Tasks belong to Projects, Milestones belong to Projects.",
+      "expected_output": "Agent creates publisher and solution first, then tables in dependency order. Uses MSCRM.SolutionUniqueName header throughout. Creates tables before relationships.",
+      "files": [],
+      "expectations": [
+        "Publisher is created or verified to exist before solution creation",
+        "Solution is created before any table creation",
+        "All 3 tables are created before any relationships",
+        "Each table has a primary name column (IsPrimaryName: true)",
+        "MSCRM.SolutionUniqueName header is present on every creation request",
+        "Relationships are created after all referenced tables exist"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I need to authenticate to the Dataverse Web API from my terminal to create some tables.",
+      "expected_output": "Agent provides Azure CLI authentication method. Does NOT suggest 'pac auth token' (which doesn't exist).",
+      "files": [],
+      "expectations": [
+        "Uses az account get-access-token command",
+        "Specifies --resource parameter with the org URL",
+        "Does NOT mention 'pac auth token'",
+        "Mentions --tenant parameter for multi-tenant scenarios",
+        "On Windows, suggests PowerShell for subsequent Web API calls"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "skill_name": "flow-decisions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "When a new project record is created in Dataverse, I want to send a Teams notification to the project manager with the project details. Should I use a Power Automate flow or a plugin for this?",
+      "expected_output": "The agent recommends a Power Automate cloud flow. Sending a Teams notification is an asynchronous operation that involves an external system (Microsoft Teams). Cloud flows are designed for this pattern -- trigger on Dataverse record creation, then use the Teams connector to send an adaptive card or chat message. A plugin would be inappropriate because plugins run synchronously in the Dataverse transaction pipeline and should not call external services (Teams API) due to timeout risks and sandbox restrictions.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Power Automate cloud flow (not a plugin)",
+        "Agent explains that Teams notification is async and involves an external system",
+        "Agent identifies the trigger: When a row is added (Dataverse)",
+        "Agent mentions using the Teams connector to post a message or adaptive card",
+        "Agent explains why a plugin is wrong: synchronous execution, external service calls in sandbox are risky, 2-minute timeout",
+        "Agent may suggest the specific flow pattern: trigger -> compose message -> post to Teams"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to validate that a phone number field matches a specific regex pattern before a contact record is saved in Dataverse. If invalid, the save should be blocked with an error message. What's the best approach?",
+      "expected_output": "The agent recommends a synchronous plugin (pre-operation stage). Phone number regex validation is a synchronous, server-side operation with no external dependencies. A pre-operation plugin can validate the field, and if invalid, throw an InvalidPluginExecutionException to block the save and display an error to the user. A Power Automate flow would be wrong because flows are asynchronous -- the record would already be saved by the time the flow runs, and you cannot block the save from a flow.",
+      "files": [],
+      "expectations": [
+        "Agent recommends a synchronous plugin registered on the Pre-Operation stage of the Create/Update message",
+        "Agent explains that the validation must be synchronous to block the save",
+        "Agent mentions throwing InvalidPluginExecutionException to display the error to the user",
+        "Agent explains why a flow is wrong: flows run asynchronously after the save completes, cannot block the save",
+        "Agent may also mention business rules as a simpler alternative for basic regex-like validation (though business rules have limited regex support)",
+        "Agent may mention that a client-side form script could provide first-line validation but server-side plugin ensures enforcement regardless of entry point"
+      ]
+    }
+  ]
+}

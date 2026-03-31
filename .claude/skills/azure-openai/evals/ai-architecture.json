@@ -1,0 +1,35 @@
+{
+  "skill_name": "azure-openai",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We want to add AI summarization to our case management app. What are our options?",
+      "expected_output": "Agent evaluates multiple AI integration approaches: AI Builder GPT prompts (simplest), Copilot Studio BYOM (conversational), and direct AOAI via Custom API (most flexible). Considers DLP and data residency.",
+      "files": [],
+      "expectations": [
+        "Agent presents AI Builder GPT prompts as the simplest option for text summarization",
+        "Agent presents Copilot Studio BYOM as an option if the summarization is part of an agent/conversational experience",
+        "Agent presents direct Azure OpenAI via Custom API or Azure Function as the most flexible option (full control over model, prompts, parameters)",
+        "Agent compares the trade-offs: AI Builder (fastest to build, least control) vs direct AOAI (most control, more setup)",
+        "Agent considers DLP policy implications (custom connectors and HTTP connector classification)",
+        "Agent considers data residency — where the AI model is deployed and where case data is processed",
+        "Agent warns against exposing AOAI API keys in client-side code"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our Power Automate flow needs to classify incoming emails and route to the right queue. How should we implement this?",
+      "expected_output": "Agent recommends AI Builder GPT prompt action in the flow for email classification, considers pre-built models, and warns about token costs at scale.",
+      "files": [],
+      "expectations": [
+        "Agent recommends AI Builder GPT prompt action within the Power Automate flow as the primary approach",
+        "Agent suggests using structured output (JSON mode) for classification results to enable reliable routing logic",
+        "Agent may mention pre-built AI Builder models (sentiment analysis, category classification) as simpler alternatives for basic classification",
+        "Agent warns about token costs at scale — every email processed consumes AI Builder credits or Copilot Credits",
+        "Agent may suggest caching or batching strategies for high-volume email processing",
+        "Agent considers the Nov 2026 AI Builder credit sunset and recommends budgeting for Copilot Credits",
+        "Agent does NOT recommend a direct AOAI integration for this scenario (AI Builder is simpler and sufficient)"
+      ]
+    }
+  ]
+}

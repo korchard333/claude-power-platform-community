@@ -1,0 +1,34 @@
+{
+  "skill_name": "app-type-decision",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need to build an app for 50 concurrent users. The UI requires complex custom interactions including drag-and-drop kanban boards, custom data visualizations, and a rich text editor. Data is stored in Dataverse. What type of Power Apps app should we build?",
+      "expected_output": "The agent evaluates this as a Code App (React + TypeScript + Vite). The complex custom UI requirements (drag-and-drop, custom visualizations, rich text editor) exceed what Canvas Apps and Model-Driven Apps can deliver natively. Code Apps allow full control over the UI with React components while still connecting to Dataverse via the Power Apps client library. 50 concurrent users is well within Code App capacity. Canvas Apps would struggle with these custom UI patterns and have performance limitations at scale. Model-Driven Apps are form-based and cannot deliver drag-and-drop kanban or custom visualizations without extensive PCF controls.",
+      "files": [],
+      "expectations": [
+        "Agent evaluates Code App as the recommended app type",
+        "Agent identifies drag-and-drop, custom visualizations, and rich text editor as requirements that exceed Canvas/MDA capabilities",
+        "Agent does NOT recommend Canvas App (UI limitations for these patterns, performance at 50 users)",
+        "Agent does NOT recommend Model-Driven App (form-based, cannot deliver drag-and-drop natively)",
+        "Agent mentions React + TypeScript + Vite as the Code App tech stack",
+        "Agent mentions Dataverse connectivity via the Power Apps client library (@microsoft/power-apps)",
+        "Agent may mention that PCF controls could partially address some requirements in MDA but adds significant complexity compared to a Code App"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need a simple data entry app for 5 users. They need to create and edit records in standard Dataverse tables (contacts, accounts, custom project table). Standard forms with a few fields each. No custom UI needed. What should we build?",
+      "expected_output": "The agent evaluates this as a Model-Driven App. Standard data entry forms on Dataverse tables with a small user count is the ideal MDA scenario. Model-Driven Apps provide auto-generated forms, views, dashboards, and business rules with minimal configuration. No custom code is needed. Building a Code App or Canvas App for this would be over-engineering -- MDA delivers this out of the box with the best Dataverse integration.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Model-Driven App",
+        "Agent identifies standard forms, standard tables, and small user count as MDA indicators",
+        "Agent does NOT recommend Code App (over-engineering for standard forms)",
+        "Agent does NOT recommend Canvas App as the primary choice (MDA is better for standard Dataverse CRUD with no custom UI)",
+        "Agent mentions benefits: auto-generated forms, views, business rules, responsive out of the box",
+        "Agent may mention that Canvas App is an alternative but MDA is the better fit for this specific scenario"
+      ]
+    }
+  ]
+}

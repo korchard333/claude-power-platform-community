@@ -1,0 +1,33 @@
+{
+  "skill_name": "copilot-studio",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a Copilot Studio agent for our HR department that answers employee questions about leave policies using our SharePoint knowledge base.",
+      "expected_output": "Agent designs a proper agent with SharePoint knowledge source, fallback topic, escalation path, and authentication.",
+      "files": [],
+      "expectations": [
+        "Agent is created inside a solution (solution-aware)",
+        "SharePoint knowledge source is configured with specific site URLs",
+        "Generative answers are enabled with content moderation set to medium or high",
+        "Fallback/no-answer topic includes escalation to human agent",
+        "Authentication is configured (Entra ID for internal employees)",
+        "Adversarial testing is mentioned or performed"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need three agents: one for HR, one for IT, and one for Finance. They should be able to hand off between each other.",
+      "expected_output": "Agent designs a multi-agent orchestration topology with embedded or connected agents.",
+      "files": [],
+      "expectations": [
+        "Recommends a multi-agent topology (hub-and-spoke or mesh)",
+        "Explains embedded agents vs connected agents vs A2A protocol",
+        "Each domain agent has its own knowledge sources scoped appropriately",
+        "Handoff between agents preserves conversation context",
+        "ALM strategy accounts for multiple agent solutions",
+        "Security boundaries between agents are defined"
+      ]
+    }
+  ]
+}

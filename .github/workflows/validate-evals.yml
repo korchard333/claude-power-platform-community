@@ -1,0 +1,42 @@
+name: Validate Evals
+on:
+  push:
+    paths:
+      - '.claude/skills/**/evals/*.json'
+      - 'evals/**/*.json'
+  pull_request:
+    paths:
+      - '.claude/skills/**/evals/*.json'
+      - 'evals/**/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate eval JSON schema
+        run: |
+          python3 -c "
+          import json, glob, sys
+          errors = []
+          files = glob.glob('.claude/skills/**/evals/*.json', recursive=True) + glob.glob('evals/**/*.json', recursive=True)
+          for f in files:
+              try:
+                  data = json.load(open(f))
+                  assert 'skill_name' in data, 'Missing skill_name'
+                  assert 'evals' in data, 'Missing evals array'
+                  for e in data['evals']:
+                      assert 'id' in e, f'Eval missing id in {f}'
+                      assert 'prompt' in e, f'Eval missing prompt in {f}'
+                      assert 'expectations' in e, f'Eval missing expectations in {f}'
+              except Exception as ex:
+                  errors.append(f'{f}: {ex}')
+          if errors:
+              for e in errors:
+                  print(f'ERROR: {e}', file=sys.stderr)
+              sys.exit(1)
+          print(f'Validated {len(files)} eval files')
+          "

@@ -1,0 +1,30 @@
+{
+  "skill_name": "plugins",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to validate that a project's end date is after its start date, and prevent the record from being saved if not.",
+      "expected_output": "Agent recommends a synchronous pre-operation plugin (or business rule if simple enough).",
+      "files": [],
+      "expectations": [
+        "Recommends pre-operation stage (stage 20) for validation",
+        "Plugin runs synchronously to block the save",
+        "Throws InvalidPluginExecutionException with clear user message",
+        "Mentions business rule as simpler alternative if the validation is straightforward",
+        "Does NOT suggest Power Automate (async, cannot block save)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to send an email notification when a project is completed.",
+      "expected_output": "Agent recommends async approach — either Power Automate or async plugin.",
+      "files": [],
+      "expectations": [
+        "Does NOT recommend synchronous plugin for sending email",
+        "Recommends Power Automate as first choice (built-in email connectors)",
+        "If plugin is chosen, recommends post-operation async (stage 40, mode 1)",
+        "Mentions sandbox timeout considerations for external calls"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "skill_name": "integration-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need real-time sync between Dataverse and an external ERP when records change. What integration pattern should we use?",
+      "expected_output": "Agent recommends an async reliable messaging pattern using Dataverse webhooks plus Azure Service Bus, not direct API polling.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Dataverse webhooks to detect record changes in real time",
+        "Agent recommends Azure Service Bus (queue or topic) for reliable async message delivery to the ERP",
+        "Agent explains why async messaging is preferred over synchronous HTTP calls (reliability, decoupling, retry)",
+        "Agent does NOT recommend polling the Dataverse API for changes as the primary pattern",
+        "Agent mentions dead-letter handling for failed messages",
+        "Agent may mention an Azure Function as an intermediary for message transformation between Dataverse and the ERP",
+        "Agent warns against synchronous HTTP calls from Dataverse plugins to external APIs (2-minute timeout, blocks user)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "An external system needs to query Dataverse data on demand. What's the best approach?",
+      "expected_output": "Agent recommends Custom API or OData endpoint for on-demand Dataverse queries, and considers authentication options.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Dataverse Web API (OData endpoint) or Custom API for external system queries",
+        "Agent discusses authentication options: server-to-server (S2S) with application user vs user-delegated auth",
+        "Agent recommends S2S with application user for system-to-system integrations (no interactive user required)",
+        "Agent may mention Custom API as a preferred approach for encapsulating business logic behind a clean interface",
+        "Agent may mention $select enforcement and query best practices to limit data returned",
+        "Agent does NOT recommend a Power Automate flow as the primary approach for on-demand external queries (latency, licensing)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to call an on-premises SQL Server from a Cloud Flow. How should we set this up?",
+      "expected_output": "Agent recommends on-premises data gateway for bridging to on-prem SQL, and considers VNet data gateway as an alternative for Azure-hosted SQL.",
+      "files": [],
+      "expectations": [
+        "Agent recommends the on-premises data gateway as the primary solution for on-prem SQL access",
+        "Agent explains the gateway bridges the private network to Power Platform cloud services",
+        "Agent mentions VNet data gateway as an alternative if the SQL Server is hosted in Azure (Azure SQL in a VNet)",
+        "Agent considers security implications (gateway service account, firewall rules, network segmentation)",
+        "Agent may recommend gateway clustering for high availability in production",
+        "Agent warns that the on-premises gateway can be a single point of failure and bottleneck if not properly managed"
+      ]
+    }
+  ]
+}

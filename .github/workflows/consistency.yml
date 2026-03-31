@@ -1,0 +1,43 @@
+name: Consistency Check
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify skill counts
+        run: |
+          # Count skill directories (excluding . and ..)
+          SKILL_COUNT=$(find .claude/skills -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')
+          echo "Found $SKILL_COUNT skill directories"
+
+          # Count router skills (those with sub-files beyond SKILL.md and evals/)
+          ROUTER_COUNT=0
+          for dir in .claude/skills/*/; do
+            md_files=$(find "$dir" -maxdepth 1 -name "*.md" ! -name "SKILL.md" | wc -l | tr -d ' ')
+            if [ "$md_files" -gt 0 ]; then
+              ROUTER_COUNT=$((ROUTER_COUNT + 1))
+            fi
+          done
+          echo "Found $ROUTER_COUNT router skills"
+
+          # Verify SKILL.md exists in every skill directory
+          MISSING=0
+          for dir in .claude/skills/*/; do
+            if [ ! -f "${dir}SKILL.md" ]; then
+              echo "ERROR: Missing SKILL.md in $dir"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "FAILED: $MISSING skills missing SKILL.md"
+            exit 1
+          fi
+
+          echo "All $SKILL_COUNT skills have SKILL.md"

@@ -1,0 +1,34 @@
+{
+  "skill_name": "custom-connectors",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need to integrate with a third-party REST API that uses OAuth 2.0 and returns paginated results. How do we build the custom connector?",
+      "expected_output": "Agent designs a custom connector with OAuth 2.0 authentication, pagination policy, and proper OpenAPI spec with operationIds and x-ms extensions.",
+      "files": [],
+      "expectations": [
+        "Agent designs the connector with OAuth 2.0 Authorization Code flow in apiProperties.json",
+        "Agent defines the OpenAPI 2.0 (Swagger) spec with proper operationIds for each action",
+        "Agent includes a pagination policy to handle paginated API responses (nextLink or offset-based)",
+        "Agent uses x-ms-summary on every parameter and property for maker-friendly display names",
+        "Agent defines response schemas so Power Automate can provide dynamic content",
+        "Agent recommends x-ms-visibility: internal for technical parameters users shouldn't see",
+        "Agent may recommend testing with both Power Automate and Canvas App (behavior can differ)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The API sometimes returns 429 (rate limited) and 503 (service unavailable). How should the connector handle these?",
+      "expected_output": "Agent adds retry policy with exponential backoff and error response mapping in the connector definition.",
+      "files": [],
+      "expectations": [
+        "Agent recommends a retry policy in the connector definition or apiProperties.json for transient errors",
+        "Agent specifies exponential backoff as the retry strategy (not fixed interval)",
+        "Agent recommends honoring the Retry-After header from 429 responses",
+        "Agent defines error response schemas in the OpenAPI definition for proper error surfacing in flows",
+        "Agent may recommend Azure APIM in front of the API for more sophisticated rate limiting, caching, and circuit breaker patterns",
+        "Agent distinguishes between retryable errors (429, 503) and non-retryable errors (400, 401, 404)"
+      ]
+    }
+  ]
+}

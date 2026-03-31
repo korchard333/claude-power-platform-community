@@ -1,0 +1,37 @@
+{
+  "skill_name": "pcf",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need a custom date range picker that works in both Canvas and Model-Driven apps. How should we build it?",
+      "expected_output": "Agent recommends a PCF field control using React and Fluent UI v9, with Canvas App compatibility, accessibility requirements, and proper lifecycle management.",
+      "files": [],
+      "expectations": [
+        "Agent recommends a PCF field control (not dataset control) for a date range picker",
+        "Agent recommends using ReactControl (virtual, control-type='virtual') as the control type",
+        "Agent recommends React with Fluent UI v9 DatePicker components",
+        "Agent mentions trackContainerResize or responsive sizing for different form layouts",
+        "Agent specifies accessibility requirements (aria-label on inputs, keyboard navigation)",
+        "Agent mentions that Canvas App support requires feature-usage declaration in ControlManifest.Input.xml",
+        "Agent recommends implementing destroy() for proper cleanup",
+        "Agent warns against using React 18-specific APIs (platform provides React 16.14.0/17.0.2)",
+        "Agent mentions production build and solution packaging for deployment"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need a custom grid that shows Dataverse data with inline editing. Should we build a PCF dataset control or use the native editable grid?",
+      "expected_output": "Agent recommends a PCF dataset control if the native editable grid doesn't meet requirements, discusses DataSet API patterns, and compares trade-offs.",
+      "files": [],
+      "expectations": [
+        "Agent discusses the native editable grid as a baseline and when it might be sufficient",
+        "Agent recommends a PCF dataset control if custom UX, specific column rendering, or advanced editing behavior is needed",
+        "Agent explains the DataSet API: sortedRecordIds, records, paging (hasNextPage, loadNextPage), sorting",
+        "Agent discusses column rendering customization (formatted values, custom cell renderers)",
+        "Agent mentions notifyOutputChanged() for saving edited values back to Dataverse",
+        "Agent warns against calling notifyOutputChanged() inside updateView() (causes infinite render loop)",
+        "Agent mentions handling the loading state from the dataset"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "skill_name": "licensing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need a data entry app for 200 users accessing standard Dataverse tables. What licensing do we need?",
+      "expected_output": "Agent evaluates per-user vs per-app licensing for 200 users accessing Dataverse, and considers whether Code Apps are involved (which require Premium).",
+      "files": [],
+      "expectations": [
+        "Agent identifies that Dataverse access requires Premium licensing (not covered by M365 seeded)",
+        "Agent evaluates per-user Premium ($20/user/month) vs per-app ($5/user/app/month) licensing",
+        "Agent recommends per-app licensing as more cost-effective for a single app with 200 users ($5 vs $20 per user)",
+        "Agent mentions pay-as-you-go ($10/active user/app/month) as an alternative if adoption is uncertain",
+        "Agent notes that if the app is a Code App, Premium licensing is required regardless",
+        "Agent may mention API request limits (40,000/day for Premium, 6,000/day for per-app pay-as-you-go) as a capacity consideration"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "5 users need an app with custom connectors, AI Builder, and Power Automate flows. What licenses should we get?",
+      "expected_output": "Agent recommends Power Apps Premium per-user for the 5 users, notes AI Builder capacity requirements (Copilot Credits), and addresses Power Automate licensing separately.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Power Apps Premium (per-user) since custom connectors require Premium",
+        "Agent notes that AI Builder consumes AI Builder credits (seeded with Premium until Nov 2026) or Copilot Credits",
+        "Agent warns about the Nov 2026 deadline when seeded AI Builder credits are removed",
+        "Agent addresses Power Automate licensing separately — flow owner needs Power Automate Premium if flows use premium connectors",
+        "Agent considers whether a Copilot Credits add-on or pay-as-you-go is needed for AI Builder usage beyond seeded credits",
+        "Agent does NOT recommend per-app licensing as the primary option when custom connectors and AI Builder are involved (per-user is simpler at this scale)"
+      ]
+    }
+  ]
+}

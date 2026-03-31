@@ -1,0 +1,49 @@
+{
+  "skill_name": "governance",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have 500 makers across 10 departments. How do we prevent them from using premium connectors in non-sanctioned apps?",
+      "expected_output": "Agent recommends a DLP policy strategy with connector classification, environment groups, and Managed Environments to control premium connector usage at scale.",
+      "files": [],
+      "expectations": [
+        "Agent recommends creating a tenant-level DLP policy as the primary control",
+        "Agent classifies connectors into Business, Non-Business, and Blocked groups",
+        "Agent blocks dangerous connectors (e.g., HTTP, SMTP) in the Blocked group for non-sanctioned environments",
+        "Agent recommends environment groups to apply different DLP policies per department or environment tier",
+        "Agent recommends enabling Managed Environments on production and UAT environments for additional governance controls",
+        "Agent suggests default environment routing to push new makers into personal developer environments instead of the default environment",
+        "Agent may mention sharing limits to prevent ungoverned apps from being shared broadly"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need to audit who created which Power Apps and flows across the tenant.",
+      "expected_output": "Agent recommends CoE Starter Kit inventory components and Managed Environments usage insights for tenant-wide visibility into maker activity.",
+      "files": [],
+      "expectations": [
+        "Agent recommends deploying the CoE Starter Kit Core module for inventory and ownership visibility",
+        "Agent mentions that CoE Starter Kit provides dashboards showing app/flow ownership, creation dates, and usage",
+        "Agent recommends Managed Environments usage insights (weekly digest) for ongoing monitoring",
+        "Agent may mention Dataverse audit logging for tracking record-level changes",
+        "Agent may mention the Power Platform admin API or admin PowerShell cmdlets as an alternative or complement",
+        "Agent does NOT recommend manual tracking spreadsheets as the primary approach"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A maker built a critical app in the default environment using personal connections. How do we fix this?",
+      "expected_output": "Agent provides a remediation plan: create a dedicated environment, migrate the app to a solution, replace personal connections with connection references, and apply governance controls.",
+      "files": [],
+      "expectations": [
+        "Agent recommends creating a dedicated production environment (not keeping the app in the default environment)",
+        "Agent recommends packaging the app into a solution for proper ALM",
+        "Agent recommends replacing personal connections with connection references (service principal or shared connections)",
+        "Agent recommends applying a DLP policy to the new environment",
+        "Agent recommends enabling Managed Environments on the target production environment",
+        "Agent may mention testing the migrated app before decommissioning the original",
+        "Agent warns about the risk of personal connections (app breaks if the maker leaves the organization)"
+      ]
+    }
+  ]
+}

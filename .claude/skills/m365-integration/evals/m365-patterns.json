@@ -1,0 +1,34 @@
+{
+  "skill_name": "m365-integration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Users should get a Teams notification when their approval is pending. How do we set this up?",
+      "expected_output": "Agent recommends sending an Adaptive Card in Teams via Power Automate, and considers Teams connector vs Graph API for delivery.",
+      "files": [],
+      "expectations": [
+        "Agent recommends a Power Automate flow triggered by the approval event",
+        "Agent recommends using an Adaptive Card in Teams for rich, actionable notifications (not plain text)",
+        "Agent considers the Teams connector (Post Adaptive Card) as the simpler option",
+        "Agent considers Microsoft Graph API as an alternative for more control (e.g., chat messages, channel posts)",
+        "Agent may include actionable buttons in the Adaptive Card (Approve/Reject) so users can act directly from Teams",
+        "Agent warns against using personal email for automated notifications (use shared mailbox or Teams channel)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The app needs to read the user's manager from Azure AD and show their recent SharePoint documents. How should we implement this?",
+      "expected_output": "Agent recommends Microsoft Graph API for both manager lookup and SharePoint document retrieval, discusses permission models and caching.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Microsoft Graph API for reading the user's manager (GET /users/{id}/manager)",
+        "Agent recommends Microsoft Graph API for retrieving recent SharePoint documents (GET /users/{id}/drive/recent or search endpoint)",
+        "Agent discusses delegated permissions vs application permissions — delegated is appropriate here since it's per-user data",
+        "Agent recommends delegated permissions with User.Read.All (or People.Read) for manager and Files.Read.All for documents",
+        "Agent suggests a caching strategy to avoid repeated Graph calls on every page load (manager info changes infrequently)",
+        "Agent may recommend a custom connector wrapping Graph API for reusability across the app",
+        "Agent handles Graph API pagination (documents endpoint may return paged results)"
+      ]
+    }
+  ]
+}

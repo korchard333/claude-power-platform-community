@@ -1,0 +1,20 @@
+{
+  "skill_name": "code-apps",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Scaffold a new Code App for managing contacts with search, list, and detail views.",
+      "expected_output": "Agent follows three-layer architecture, uses correct CLI commands, sets up provider stack, implements accessibility.",
+      "files": [],
+      "expectations": [
+        "Uses npx degit or npm create to scaffold from starter template",
+        "Runs pac code init and pac code add-data-source for Dataverse connection",
+        "Project structure follows three-layer: components/, hooks/, generated/",
+        "Provider stack is ThemeProvider > SonnerProvider > QueryProvider > RouterProvider",
+        "Router basename normalization is present",
+        "All components use semantic HTML with aria labels",
+        "Loading, error, and empty states are implemented"
+      ]
+    }
+  ]
+}

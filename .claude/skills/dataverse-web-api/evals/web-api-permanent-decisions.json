@@ -1,0 +1,30 @@
+{
+  "skill_name": "dataverse-web-api",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I created a table called 'proj_Task' but I want to rename the logical name to 'proj_ProjectTask'. How do I do that?",
+      "expected_output": "Agent explains that table logical names are PERMANENT and cannot be changed after creation. Suggests creating a new table with the correct name and migrating data.",
+      "files": [],
+      "expectations": [
+        "Clearly states that table logical names cannot be changed",
+        "Does NOT provide a rename API call",
+        "Suggests creating a new table with the correct name as the alternative",
+        "Mentions that display name CAN be changed",
+        "Warns about the importance of getting logical names right on first creation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a text column 'proj_score' that I want to convert to an integer column.",
+      "expected_output": "Agent explains that column data types cannot be changed after creation. Suggests creating a new integer column and migrating data.",
+      "files": [],
+      "expectations": [
+        "Clearly states that column data types are permanent",
+        "Does NOT suggest a type conversion API",
+        "Suggests creating a new column with the correct type",
+        "Mentions data migration strategy for existing records"
+      ]
+    }
+  ]
+}

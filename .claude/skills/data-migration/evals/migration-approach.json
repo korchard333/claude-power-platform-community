@@ -1,0 +1,36 @@
+{
+  "skill_name": "data-migration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need to migrate 500,000 contact records from a legacy SQL database to Dataverse. What approach should we use?",
+      "expected_output": "Agent recommends a bulk import approach appropriate for 500K records, discusses staging table pattern, and emphasizes data quality validation.",
+      "files": [],
+      "expectations": [
+        "Agent recommends Web API bulk operations (CreateMultiple) as the primary approach for 500K records",
+        "Agent may mention SSIS + KingswaySoft or Azure Data Factory as alternatives for complex transformations",
+        "Agent recommends the staging table pattern (load raw data first, validate, then insert into production tables)",
+        "Agent emphasizes pre-migration data quality checks (duplicates, required fields, data types, lookup resolution)",
+        "Agent recommends pre-building lookup maps (e.g., account name to GUID) before migration, not resolving during insert",
+        "Agent recommends taking an environment backup before migration",
+        "Agent mentions a cutover rehearsal to validate timing and scripts before production migration",
+        "Agent discusses a rollback strategy (batch delete or restore from backup)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need to merge two Dataverse environments that have overlapping data. How should we approach this?",
+      "expected_output": "Agent addresses duplicate detection, alternate key strategy, relationship remapping, cutover rehearsal, and rollback plan for a complex environment merge.",
+      "files": [],
+      "expectations": [
+        "Agent addresses duplicate detection as the primary challenge (overlapping records across environments)",
+        "Agent recommends an alternate key strategy to identify and match records across environments",
+        "Agent discusses relationship remapping (lookups in the source environment point to different GUIDs in the target)",
+        "Agent recommends a cutover rehearsal with both environments' data to validate the merge process",
+        "Agent recommends a documented rollback plan (pre-merge backup, rollback triggers, restore procedure)",
+        "Agent suggests a phased approach (merge reference data first, then transactional data)",
+        "Agent warns about auto-number conflicts between the two environments"
+      ]
+    }
+  ]
+}

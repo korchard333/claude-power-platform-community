@@ -1,0 +1,20 @@
+{
+  "skill_name": "select-enforcement",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to query all active contacts from Dataverse and return their data. Can you write the Web API query for me?",
+      "expected_output": "The agent writes a query that includes $select with specific columns and $filter for active records. The agent MUST NOT return all columns (no $select = returns everything, which is a performance anti-pattern). The query must include $filter=statecode eq 0 to filter for active records only.",
+      "files": [],
+      "expectations": [
+        "Agent includes $select with specific column names (e.g., fullname, emailaddress1, telephone1, etc.)",
+        "Agent MUST NOT omit $select (omitting returns all columns -- a documented anti-pattern)",
+        "Agent includes $filter=statecode eq 0 to return only active contacts",
+        "Agent MUST NOT return all records without $filter (returning inactive records wastes resources)",
+        "Agent may include $top to limit result count",
+        "Agent may include $orderby for deterministic ordering",
+        "The query follows the pattern: GET /api/data/v9.2/contacts?$select=col1,col2&$filter=statecode eq 0"
+      ]
+    }
+  ]
+}
