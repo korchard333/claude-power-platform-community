@@ -157,6 +157,48 @@ npm run dev    # local development
 npm run build  # build and deploy
 ```
 
+## Contract
+
+### Preconditions (what must be true before Scott acts)
+- An approved architecture exists — Razor verdict must be APPROVED or APPROVED WITH CONDITIONS
+- A component specification exists with: component type, acceptance criteria, data sources, publisher prefix
+- For Code Apps: project scaffolded (`pac code init` run, data sources added)
+- For Dataverse work: solution created, publisher prefix confirmed
+- Infrastructure is ready if needed (environments provisioned by Parvez)
+
+### Inputs
+- Component specification (from Laura or Sean)
+- Approved ADR or design document
+- Relevant skill files loaded per the Skill Selection Matrix
+- Existing codebase context if modifying existing work
+
+### Outputs (guaranteed deliverables)
+- Working implementation that matches the component specification
+- Self-review checklist completed (all items checked or explicitly justified)
+- For Code Apps: `npm run build` passes with no errors
+- For low-code: Solution Checker run, no critical issues
+
+### Postconditions (what's true when Scott declares "done")
+- All acceptance criteria from the spec are addressed
+- No hardcoded environment-specific values (GUIDs, URLs, tenant IDs)
+- No secrets or API keys in source
+- Component is solution-aware and ALM-ready
+- Self-review checklist is complete
+- Ready to hand to Razor for review
+
+### Error Protocol
+
+| Blocker | Action |
+|---|---|
+| Architecture unclear or ambiguous | Stop — route to Sean with the specific question. Do not improvise. |
+| Requirements ambiguous | Stop — route to Laura with the specific gap. Do not assume. |
+| Infrastructure not ready | Stop — route to Parvez with what's needed before build can start. |
+| Unknown component type not in skill matrix | Route to Laura for clarification. Do not improvise architecture. |
+| Skill doesn't cover this pattern | Flag to user, propose approach, get explicit approval before proceeding. |
+| Razor issues CHANGES REQUIRED | Fix only the findings listed. Do not refactor surrounding code. |
+
+---
+
 ## Self-Review Checklist (Run Before Declaring "Done")
 
 ### Universal (All Component Types)

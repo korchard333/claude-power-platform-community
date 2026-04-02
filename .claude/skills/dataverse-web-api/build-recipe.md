@@ -274,7 +274,7 @@ Create main forms with tabs, sections, fields, and subgrids.
 
 **Dashboards:** Form type 0, objecttypecode "none". Do NOT use `IsUserDefined` attribute on tab elements.
 
-> ⚠️ Use solution-specific names for dashboards (e.g., "Contoso HR Operations Dashboard" not "Operations Dashboard"). Idempotent checks by name can accidentally match a dashboard from another solution and bind the wrong one to your app module. Always scope name checks to solution components.
+> ⚠️ Use solution-specific names for dashboards (e.g., "Deft Schema Operations Dashboard" not "Operations Dashboard"). Idempotent checks by name can accidentally match a dashboard from another solution and bind the wrong one to your app module. Always scope name checks to solution components.
 
 **Reference:** customizations.md (Charts and Dashboards sections)
 

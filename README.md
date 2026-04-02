@@ -1,28 +1,27 @@
 # Claude Code Power Platform
 
-A community-maintained set of **Claude Code skills** for Microsoft Power Platform development.
+A work-in-progress set of **Claude Code skills** for Microsoft Power Platform development.
 
-## Why This Exists
+This is a collection of opinionated patterns, conventions, and prompts built up over time
+working with Claude Code on Power Platform projects. Some of it has been tested in practice.
+Some of it hasn't yet. Treat it as a foundation to adapt and build on — not something to
+drop into a production project and trust blindly.
 
-AI coding assistants are powerful, but they lack deep knowledge of Power Platform — its APIs, patterns, gotchas, and best practices. These skills fill that gap. Install them once and Claude Code becomes a Power Platform expert that knows how to build Code Apps, design Dataverse schemas, write Web API calls, configure security models, set up CI/CD pipelines, and more — all following enterprise patterns that actually work in production.
+Use it at your own risk, with your own judgement. It's not claiming to be the right way
+to do Power Platform, and it's definitely not production-ready out of the box. If something
+doesn't fit your context, change it. If something looks wrong, it probably is — raise it
+or fix it.
 
-**Built from real project experience**, not just documentation summaries. Every pattern, rule, and anti-pattern comes from building and shipping Power Platform solutions.
-
-## Who It's For
-
-- **Power Platform developers** who use Claude Code and want better AI-assisted builds
-- **Teams** who want consistent standards across their Claude Code sessions
-- **Solo builders** who want an opinionated guide on how to do things properly
-- **Anyone curious** about structuring AI skills for a complex platform
+Contributions and corrections welcome.
 
 ## What's Included
 
 | Category | Count | Description |
 |---|---|---|
 | **Agent Skills** | 6 | Specialized personas: Project Manager, Solutions Architect, Platform Builder, Code Reviewer, DevOps Engineer, UAT Coordinator |
-| **Domain Skills** | 33 | Deep reference material for every Power Platform technology (23 use router pattern with sub-files) |
-| **Instructions** | 1 | `CLAUDE.md` — non-negotiable standards loaded into every session |
-| **Eval Scenarios** | 36 | JSON test cases across 22 skills for behavioral validation |
+| **Domain Skills** | 33 | Reference material for Power Platform technologies (23 use a router pattern with sub-files) |
+| **Instructions** | 1 | `CLAUDE.md` — coding standards loaded into every session |
+| **Eval Scenarios** | 36 | JSON test cases across 22 skills |
 | **Samples** | 4 areas | Code Apps (React), MDA custom pages, PCF controls, plugins |
 | **CI/CD** | 3 | Markdown lint, consistency checks, eval schema validation |
 
@@ -31,8 +30,8 @@ AI coding assistants are powerful, but they lack deep knowledge of Power Platfor
 ### Global Install (recommended)
 
 ```bash
-git clone https://github.com/korchard333/claude-power-platform-community.git ~/claude-power-platform
-cd ~/claude-power-platform
+git clone <repo-url> ~/DEV/claude-power-platform
+cd ~/DEV/claude-power-platform
 chmod +x install.sh && ./install.sh
 ```
 
@@ -48,14 +47,18 @@ Copies skills into the project's `.claude/` for team sharing via git.
 
 ## The Agent Team
 
+Six personas, each with a defined role and scope. The idea is that different phases of
+a project benefit from different "hats" — requirements, architecture, building, reviewing,
+infrastructure, and testing. In practice you'll probably use a few more than others.
+
 | Skill | Name | Role |
 |---|---|---|
-| `/project-manager` | Laura | Requirements, planning, orchestration, Definition of Done |
+| `/project-manager` | Laura | Requirements, planning, orchestration |
 | `/solutions-architect` | Sean | Architecture, data models, ALM strategy, app type selection |
 | `/platform-builder` | Scott | Builds everything — Code Apps, Canvas, MDA, flows, PCF, plugins |
-| `/code-reviewer` | Razor | Quality reviews with severity-rated findings (S1-S4) |
-| `/devops-engineer` | Parvez | Environments, CI/CD, service principals, governance |
-| `/uat-coordinator` | Ava | UAT scripts, test cycles, defect tracking, sign-off |
+| `/code-reviewer` | Razor | Code and architecture review with severity-rated findings |
+| `/devops-engineer` | Parvez | Environments, CI/CD, service principals |
+| `/uat-coordinator` | Ava | UAT scripts, defect tracking, sign-off |
 
 ### Usage
 
@@ -70,7 +73,7 @@ Invoke any agent skill directly:
 /uat-coordinator — Generate UAT scripts
 ```
 
-Or use `/power-platform-team` to let the orchestrator determine which agent to activate.
+Or use `/power-platform-team` to let the orchestrator pick the right agent from context.
 
 ## Domain Skills (33)
 
@@ -102,8 +105,8 @@ Or use `/power-platform-team` to let the orchestrator determine which agent to a
 
 | File | Purpose |
 |---|---|
-| `CLAUDE.md` | Non-negotiable standards (auto-loaded by Claude Code) |
-| `ORCHESTRATION.md` | Agent team coordination guide |
+| `CLAUDE.md` | Coding standards (auto-loaded by Claude Code) |
+| `ORCHESTRATION.md` | How the agent team coordinates |
 | `.claude/skills/` | All skills (agent + domain) |
 | `.claude/settings.json` | MCP servers, permissions |
 | `evals/` | Eval scenarios |
@@ -115,23 +118,13 @@ Or use `/power-platform-team` to let the orchestrator determine which agent to a
 # Inject into a project for sharing via git
 ./inject-project.sh /path/to/project
 
-# The project now has .claude/skills/ and CLAUDE.md
-# Commit and push — team members get the skills automatically
+# The project then has .claude/skills/ and CLAUDE.md
+# Commit and push — team members get the skills on pull
 ```
-
-## Share What You Learn
-
-Found a gotcha? Discovered the correct API pattern? Worked through a tricky build?
-
-Head to [Discussions](https://github.com/korchard333/claude-power-platform-community/discussions) and share it. Learnings from real builds are how these skills get better.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding skills, evals, and agents.
-
-## Acknowledgements
-
-- [Daniel Kerridge](https://github.com/DanielKerridge/claude-code-power-platform-skills) — early Power Platform skills for Claude Code that inspired this project
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

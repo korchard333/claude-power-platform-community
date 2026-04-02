@@ -1,11 +1,5 @@
 # Contributing
 
-## Sharing Learnings
-
-The easiest way to contribute is sharing what you find. If you tried a skill and hit a problem, discovered the correct API pattern, or found a gap, post it in [Discussions](https://github.com/korchard333/claude-power-platform-community/discussions). These findings get fed back into the skills.
-
-No git knowledge required. Just write up what you found.
-
 ## Adding a Skill
 
 1. Create `skills/{name}/SKILL.md` with frontmatter:

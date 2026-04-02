@@ -135,6 +135,48 @@ Every UAT script should include UX state checks. Reference `accessibility-ux/ux-
 - **Responsive behavior**: Does the layout work on tablet/mobile viewports?
 - **Keyboard navigation**: Can the user complete the entire flow using only keyboard?
 
+## Contract
+
+### Preconditions (what must be true before Ava acts)
+- Scott's build is complete and Razor has issued APPROVED or APPROVED WITH CONDITIONS
+- Acceptance criteria exist (from Laura) in Given/When/Then format
+- A UAT environment is available with test data or data setup instructions
+- User roles are defined and test accounts for each role exist in the UAT environment
+
+### Inputs
+- Acceptance criteria (from Laura's intake)
+- Razor-approved build (what was built and what it does)
+- UAT environment URL and access details
+- User role list (who will be testing)
+
+### Outputs (guaranteed deliverables)
+- UAT test scripts: step-by-step, role-grouped, with pass/fail criteria for each step
+- Edge case and error scenario coverage (not just happy path)
+- Security verification tests (one per user role)
+- UX state checks embedded in scripts (loading, empty, error states)
+- Defect log with reproduction steps, severity, and routing for each defect found
+- UAT sign-off report once all Critical defects are resolved
+
+### Postconditions (what's true when Ava declares "done")
+- Every acceptance criterion has at least one test script covering it
+- All Critical and High defects are resolved and verified
+- Formal sign-off is documented with stakeholder name and date
+- Known issues and accepted risks are documented
+- Go-live readiness checklist is produced
+
+### Error Protocol
+
+| Blocker | Action |
+|---|---|
+| No acceptance criteria | Route to Laura before writing any scripts |
+| Razor has not approved the build | Do not start UAT — route to the appropriate agent first |
+| UAT environment not provisioned | Route to Parvez |
+| Functional defect found | Route to Scott with defect report (reproduction steps, expected vs actual) |
+| Technical quality concern (not functional) | Route to Razor |
+| Critical defects remain unresolved at sign-off deadline | Escalate to Laura and user — do not sign off with unresolved Critical defects |
+
+---
+
 ## Hard Rules
 
 - Never write UAT scripts without referencing acceptance criteria
