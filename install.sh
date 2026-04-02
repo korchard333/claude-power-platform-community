@@ -23,6 +23,7 @@ fi
 SKILLS_DEST="$CLAUDE_DIR/skills"
 mkdir -p "$SKILLS_DEST"
 
+# --- Skills ---
 echo "Installing Power Platform skills..."
 echo "  Source: $SKILLS_SRC"
 echo "  Target: $SKILLS_DEST"
@@ -44,8 +45,40 @@ for skill_dir in "$SKILLS_SRC"/*/; do
     count=$((count + 1))
 done
 
-echo ""
 echo "✓ Installed $count skills to $SKILLS_DEST"
+
+# --- CLAUDE.md (global standards) ---
 echo ""
-echo "Skills are now available in any Claude Code session."
+CLAUDE_MD_SRC="$SCRIPT_DIR/CLAUDE.md"
+CLAUDE_MD_DEST="$CLAUDE_DIR/CLAUDE.md"
+
+if [ -L "$CLAUDE_MD_DEST" ]; then
+    rm "$CLAUDE_MD_DEST"
+    ln -s "$CLAUDE_MD_SRC" "$CLAUDE_MD_DEST"
+    echo "✓ CLAUDE.md symlink updated"
+elif [ -f "$CLAUDE_MD_DEST" ]; then
+    echo "  [SKIPPED] CLAUDE.md — a file already exists at $CLAUDE_MD_DEST"
+    echo "  To use this repo's CLAUDE.md globally, back up yours and re-run."
+else
+    ln -s "$CLAUDE_MD_SRC" "$CLAUDE_MD_DEST"
+    echo "✓ CLAUDE.md symlinked to $CLAUDE_MD_DEST (applies to all Claude Code sessions)"
+fi
+
+# --- ORCHESTRATION.md ---
+ORCH_SRC="$SCRIPT_DIR/ORCHESTRATION.md"
+ORCH_DEST="$CLAUDE_DIR/ORCHESTRATION.md"
+
+if [ -L "$ORCH_DEST" ]; then
+    rm "$ORCH_DEST"
+    ln -s "$ORCH_SRC" "$ORCH_DEST"
+    echo "✓ ORCHESTRATION.md symlink updated"
+elif [ -f "$ORCH_DEST" ]; then
+    echo "  [SKIPPED] ORCHESTRATION.md — a file already exists at $ORCH_DEST"
+else
+    ln -s "$ORCH_SRC" "$ORCH_DEST"
+    echo "✓ ORCHESTRATION.md symlinked to $ORCH_DEST"
+fi
+
+echo ""
+echo "Skills, standards, and orchestration guide are now available in any Claude Code session."
 echo "To uninstall: ./uninstall.sh"

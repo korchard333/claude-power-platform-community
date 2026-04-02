@@ -40,5 +40,21 @@ for skill_dir in "$SKILLS_SRC"/*/; do
     fi
 done
 
-echo ""
 echo "✓ Removed $count skill symlinks from $SKILLS_DEST"
+
+# Remove CLAUDE.md and ORCHESTRATION.md symlinks (only if they point to this repo)
+for file in CLAUDE.md ORCHESTRATION.md; do
+    target="$CLAUDE_DIR/$file"
+    if [ -L "$target" ]; then
+        link_target="$(readlink "$target")"
+        if [[ "$link_target" == "$SCRIPT_DIR"* ]]; then
+            rm "$target"
+            echo "✓ Removed $file symlink"
+        else
+            echo "  [SKIPPED] $file — symlink points elsewhere, not removing"
+        fi
+    fi
+done
+
+echo ""
+echo "✓ Uninstall complete"
