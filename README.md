@@ -30,8 +30,8 @@ Contributions and corrections welcome.
 ### Global Install (recommended)
 
 ```bash
-git clone <repo-url> ~/DEV/claude-power-platform
-cd ~/DEV/claude-power-platform
+git clone https://github.com/korchard333/claude-power-platform-community.git
+cd claude-power-platform-community
 chmod +x install.sh && ./install.sh
 ```
 
