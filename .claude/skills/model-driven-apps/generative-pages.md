@@ -64,22 +64,31 @@ After generating, **read RuntimeTypes.ts** and verify: actual column names, read
 ## DataAPI Quick Reference
 
 ```typescript
-// Query with pagination
+// Query with pagination — result contains { rows, hasMoreRows, loadMoreRows }
 const result = await dataApi.queryTable("account", {
   select: ["name", "revenue"],
   filter: `contains(name,'test')`,
   orderBy: `name asc`,
   pageSize: 50,
 });
+const accounts = result.rows; // Object[] — array of row data
 // Load more rows
 if (result.hasMoreRows && result.loadMoreRows) {
   const nextPage = await result.loadMoreRows();
+  const moreAccounts = nextPage.rows;
 }
 
 // CRUD operations
 await dataApi.createRow("account", { name: "New Account" });
 await dataApi.updateRow("account", "record-id", { name: "Updated" });
 const row = await dataApi.retrieveRow("account", { id: "record-id", select: ["name"] });
+
+// Lookup fields in createRow: use @odata.bind with /entity(guid) format
+const newContactId = await dataApi.createRow("contact", {
+  firstname: "John",
+  lastname: "Doe",
+  "parentcustomerid@odata.bind": `/account(${accountId})`,
+});
 
 // Lookup fields: _value is GUID, FormattedValue is display name
 const contactGuid = row._primarycontactid_value;                                            // GUID
@@ -109,9 +118,7 @@ Formatted value annotations (e.g., `@OData.Community.Display.V1.FormattedValue`)
 
 ### Foreign Key Values Use `/entity(guid)` Format
 
-> Discovered by examining DataAPI runtime behaviour — not officially documented by Microsoft. May change in platform updates.
-
-Foreign key values are returned in `/entity(guid)` format (e.g., `/ds_engagement(a1b2c3d4-...)`), NOT as plain GUIDs. An `extractGuid()` helper is required to match against primary keys:
+Foreign key values are returned in `/entity(guid)` format (e.g., `/ds_engagement(a1b2c3d4-...)`), matching the `@odata.bind` format used for writes. An `extractGuid()` helper is required to match against primary keys:
 
 ```typescript
 function extractGuid(fkValue: string | null | undefined): string | null {
