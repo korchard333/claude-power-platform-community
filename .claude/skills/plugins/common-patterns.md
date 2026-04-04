@@ -207,3 +207,69 @@ public class CalculateProjectHealth : IPlugin
     }
 }
 ```
+
+---
+
+## Critical: C# SDK vs Web API — Never Use `@odata.bind` in SDK Code
+
+`@odata.bind` is a **Web API–only** convention. In the C# Organization Service SDK, use `EntityReference` for lookups:
+
+```csharp
+// WRONG — Web API syntax in C# SDK throws "entity doesn't contain attribute with Name = 'contoso_assetid@odata.bind'"
+entity["contoso_assetid@odata.bind"] = $"/contoso_assets({assetId})";
+
+// CORRECT — C# SDK uses EntityReference objects
+entity["contoso_assetid"] = new EntityReference("contoso_asset", assetId);
+```
+
+---
+
+## Critical: Fields Auto-Set by Pre-Op Plugins Must Have RequiredLevel=None
+
+Client-side form validation (`RequiredLevel = ApplicationRequired` or `Required`) fires **before** the HTTP save request reaches the server. A Pre-Operation (Stage 20) plugin never executes — the browser blocks the request first.
+
+**Rule:** Any field whose value is set by a Pre-Op plugin must have `RequiredLevel = None` in the column schema. The plugin guarantees the value; the required constraint adds no safety — only breakage.
+
+```http
+PUT /api/data/v9.2/EntityDefinitions(LogicalName='contoso_order')/Attributes(LogicalName='contoso_ordernumber')
+If-Match: *
+MSCRM.MergeLabels: true
+
+{
+  "@odata.type": "Microsoft.Dynamics.CRM.StringAttributeMetadata",
+  "SchemaName": "contoso_OrderNumber",
+  "RequiredLevel": { "Value": "None" }
+}
+```
+
+---
+
+## Custom API: Integer Parameters Default to 0 When Omitted
+
+When a caller omits an optional Integer Custom API parameter, Dataverse passes CLR default `0` — NOT null. A guard is required before using the value as an OptionSet:
+
+```csharp
+// WRONG — OptionSetValue(0) when parameter is omitted → "value 0 outside valid range"
+if (context.InputParameters.TryGetValue("StatusCode", out object statusObj)
+    && statusObj is int statusInt)
+{
+    update["contoso_status"] = new OptionSetValue(statusInt);
+}
+
+// CORRECT — treat 0 as "not provided"
+if (context.InputParameters.TryGetValue("StatusCode", out object statusObj)
+    && statusObj is int statusInt && statusInt > 0)
+{
+    update["contoso_status"] = new OptionSetValue(statusInt);
+}
+```
+
+**Also:** Always surface exception details in output parameters for Custom APIs — otherwise silent failures produce `ReturnedCount=0` with no explanation:
+
+```csharp
+catch (Exception ex)
+{
+    failedIds.Add(id.ToString("D") + " [" + ex.GetType().Name + ": " + ex.Message + "]");
+    failedCount++;
+}
+```

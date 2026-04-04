@@ -325,12 +325,15 @@ export const MyComponent = ({ isHighlighted }: { isHighlighted: boolean }) => {
 Since makeStyles is build-time optimized, you **cannot pass runtime values**. Pre-define variants and select with `mergeClasses`:
 
 ```tsx
+import { makeStyles, shorthands, tokens } from '@fluentui/react-components';
+
 const useStyles = makeStyles({
   base: { padding: tokens.spacingHorizontalM },
   sizeSmall: { fontSize: tokens.fontSizeBase200, padding: tokens.spacingHorizontalS },
   sizeLarge: { fontSize: tokens.fontSizeBase400, padding: tokens.spacingHorizontalL },
-  statusError: { borderColor: tokens.colorPaletteRedBorder1 },
-  statusSuccess: { borderColor: tokens.colorPaletteGreenBorder1 },
+  // ⚠️ borderColor REQUIRES shorthands helper — raw borderColor fails tsc -b strict build
+  statusError: { ...shorthands.borderColor(tokens.colorPaletteRedBorder1) },
+  statusSuccess: { ...shorthands.borderColor(tokens.colorPaletteGreenBorder1) },
 });
 
 // In component:
@@ -385,7 +388,14 @@ const useStyles = makeStyles({
 });
 ```
 
-> **Exception:** `borderColor`, `borderStyle`, and `borderWidth` still require the `shorthands` helper due to Griffel internals. A codemod (`griffel-codemod-shorthands`) is available to migrate legacy code.
+> **⚠️ CRITICAL EXCEPTION:** `borderColor`, `borderStyle`, and `borderWidth` still require the `shorthands` helper due to Griffel internals — even in v9.46+.
+>
+> Raw `borderColor: tokens.colorX` **passes Vitest** (looser TypeScript settings) but **fails `tsc -b`** (strict project references with `Type 'string' is not assignable to type 'undefined'`).
+> The production build uses `tsc -b` — this is the most common build failure when using makeStyles.
+>
+> **Always use:** `...shorthands.borderColor(tokens.colorX)` — not `borderColor: tokens.colorX`
+>
+> A codemod (`griffel-codemod-shorthands`) is available to migrate legacy code.
 
 ### Slot Styling
 
@@ -694,7 +704,7 @@ For the sidebar, switch from `NavDrawer type="inline"` to `type="overlay"` on sm
 ## Anti-Patterns
 
 - **String concatenation for classes** — Never `classes.a + ' ' + classes.b`. Always use `mergeClasses()` to properly deduplicate atomic CSS
-- **CSS shorthands in makeStyles (pre-v9.46)** — If on an older version, `margin: '4px 8px'` won't work — use `shorthands.margin('4px', '8px')`. On v9.46+, CSS shorthands work directly (except `borderColor`/`borderStyle`/`borderWidth`)
+- **`borderColor` without shorthands** — ALWAYS use `...shorthands.borderColor(tokens.colorX)` not `borderColor: tokens.colorX`. Raw borderColor passes Vitest but fails `tsc -b` production build with "Type 'string' is not assignable to type 'undefined'". This is the #1 most common Griffel build failure. Same applies to `borderStyle` and `borderWidth`.
 - **Multiple `makeResetStyles` on one element** — Only one `makeResetStyles` class per element. Use `makeStyles` for additional variations
 - **Runtime values in makeStyles** — Build-time optimization means no dynamic values. Pre-define variants and select with `mergeClasses`, or use inline `style` for truly dynamic values
 - **Using `!important`** — Never use it. Rely on `mergeClasses` ordering instead

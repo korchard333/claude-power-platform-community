@@ -37,9 +37,31 @@ dotnet add reference ../Contoso.Plugins/Contoso.Plugins.csproj
 ```
 
 ### Strong Name Key (Required for Plugin Registration)
+
+#### Windows
 ```bash
-# Generate signing key
+# Generate signing key (Windows — requires .NET SDK or Windows SDK)
 sn -k ContosoPlugins.snk
+```
+
+#### macOS / Linux (sn.exe unavailable)
+`sn.exe` is Windows-only. Generate an SNK via a temporary .NET console app:
+
+```bash
+# Create a temp project
+mkdir /tmp/snkgen && cd /tmp/snkgen
+dotnet new console -f net10.0
+
+# Replace Program.cs with this one-liner
+cat > Program.cs << 'EOF'
+using System.Security.Cryptography;
+var csp = new RSACryptoServiceProvider(1024);
+File.WriteAllBytes("ContosoPlugins.snk", csp.ExportCspBlob(true));
+Console.WriteLine("SNK written to ContosoPlugins.snk");
+EOF
+
+dotnet run
+# Copy the generated ContosoPlugins.snk to your plugin project
 ```
 
 ---

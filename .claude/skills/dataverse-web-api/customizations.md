@@ -6,6 +6,13 @@
 
 `savedqueries` has **no unique constraint on name**. Every `POST` creates a new record. Always query by name + `returnedtypecode` before creating:
 
+> **⚠️ `returnedtypecode` is a STRING (entity logical name), NOT an integer ObjectTypeCode.**
+>
+> - OData filter: `returnedtypecode eq 'contoso_project'` ✅ (entity logical name)
+> - OData filter: `returnedtypecode eq 10607` ❌ → "entity with a name = '10607' not found"
+>
+> The integer ObjectTypeCode (from `EntityDefinitions?$select=ObjectTypeCode`) is only used in the `<grid object="OTC">` attribute inside `layoutxml` — that is a different context entirely.
+
 ```python
 existing = api_get(f"savedqueries?$filter=name eq '{view_name}' and returnedtypecode eq '{table_name}'&$select=savedqueryid")
 if existing["value"]:

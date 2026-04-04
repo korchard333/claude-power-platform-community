@@ -88,6 +88,9 @@ export class MyControl implements ComponentFramework.StandardControl<IInputs, IO
 ## Manifest Patterns
 
 ### Field Control
+
+> ⚠️ **CRITICAL:** Virtual controls using React/Fluent MUST declare `<platform-library>` elements. Without these, the PCF bundles its own React — and the platform ALSO provides React — resulting in two React instances. Fluent UI v9 hooks immediately fail with **"Invalid hook call… more than one copy of React"** and bundle size bloats from ~16 KB to ~2.5 MB.
+
 ```xml
 <control namespace="Contoso" constructor="MyControl" version="1.0.0"
          display-name-key="MyControl" description-key="MyControl_Desc"
@@ -101,9 +104,22 @@ export class MyControl implements ComponentFramework.StandardControl<IInputs, IO
   <resources>
     <code path="index.ts" order="1" />
     <css path="css/styles.css" order="1" />
+    <!-- REQUIRED for virtual controls using React/Fluent UI:
+         These declarations tell webpack to exclude React and Fluent from the bundle.
+         The platform provides one shared instance at runtime.
+         Omitting these causes double-React loading → "Invalid hook call" error. -->
+    <platform-library name="React" version="16.14.0" />
+    <platform-library name="Fluent" version="9.46.2" />
   </resources>
 </control>
 ```
+
+**With platform-library declarations:**
+- Move `@fluentui/react-components`, `react`, and `react-dom` to `devDependencies` (types only at compile time)
+- `bundle.js` drops from ~2.5 MB → ~16 KB
+- The platform provides one shared React instance to all virtual controls on the page
+
+**Official docs:** [platform-library element reference](https://learn.microsoft.com/power-apps/developer/component-framework/manifest-schema-reference/platform-library) — this is Category B, fully documented.
 
 ### Dataset Control
 ```xml
@@ -225,6 +241,40 @@ export class MyControl implements ComponentFramework.StandardControl<IInputs, IO
 
 ---
 
+## ESLint Setup for PCF
+
+`pac pcf push` runs `npm install` internally. Extra ESLint devDependencies cause ERESOLVE failures due to incompatible peer requirements.
+
+**Use minimal ESLint only:**
+
+```json
+// package.json — devDependencies
+"eslint": "^9.0.0"
+// DO NOT add: typescript-eslint, eslint-plugin-promise, @typescript-eslint/eslint-plugin, eslint-plugin-react
+// These have incompatible peer requirements that cause pac pcf push to fail
+```
+
+```js
+// eslint.config.mjs — minimal config that satisfies pcf-scripts peer dep
+export default [
+  { ignores: ["node_modules/**", "out/**", "obj/**", "generated/**"] }
+];
+```
+
+No TypeScript-ESLint, no eslint-plugin-react, no globals package needed. pcf-scripts only needs ESLint as a peer dep.
+
+## `scheduler` Dependency
+
+`@fluentui/react-context-selector` imports `scheduler` directly. npm may install it nested inside `react-dom/node_modules/` rather than hoisted to the project root. If webpack reports "Module not found: Can't resolve 'scheduler'", add it explicitly:
+
+```json
+"scheduler": "^0.20.2"
+```
+
+Must be `^0.20.2` — `@fluentui/react-components@9.46.2` requires `^0.19.0 || ^0.20.0`; version `0.27.x` causes peer conflict during `pac pcf push`.
+
+---
+
 ## CLI Workflow
 
 ```bash
@@ -325,7 +375,7 @@ Canvas App → Insert → Get more components → Code tab → Import → Select
 - Hardcoding entity names or field names (use manifest properties)
 - Not handling loading state for dataset controls
 - Using React 18-specific APIs (`useTransition`, `useDeferredValue`, concurrent features) — platform provides React 16.14.0/17.0.2
-- Bundling React/Fluent UI as externals when using platform libraries (causes double-loading)
+- **Missing `<platform-library>` declarations** in virtual control manifest — causes two React instances, "Invalid hook call" error, and ~2.5 MB bundle instead of ~16 KB. Always declare both `React` and `Fluent` platform libraries for virtual controls using Fluent UI v9.
 
 ---
 

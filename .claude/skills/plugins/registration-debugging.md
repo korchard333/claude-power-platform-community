@@ -30,6 +30,7 @@ pac plugin list
 4. Register → Register New Image (if needed)
    - Pre-Image or Post-Image
    - Select specific attributes (not all)
+   - **`entityalias` is required and cannot be NULL** — use the step name (e.g., `"PreImage"`) as the value when creating `sdkmessageprocessingstepimages` via the Web API
 ```
 
 ### Step Registration Parameters
@@ -68,6 +69,10 @@ Content-Type: application/json
 }
 ```
 Values: 0 = Off, 1 = Exception only, 2 = All
+
+> **⚠️ Known Issue:** In some developer environments, `GET /api/data/v9.2/plugintracelog` returns 404 even after enabling logging. The `PATCH` to set `plugintracelogsetting: 2` is accepted (HTTP 204) but the entity may not be accessible via Web API depending on environment/license.
+>
+> **Alternative:** Check Plugin Trace Log in the classic interface — Settings → Plugin Trace Log in the model-driven app, or Power Platform Admin Center → Settings → Plugin Trace Log.
 
 ### ILogger — Application Insights Integration
 Send structured telemetry to Azure Application Insights (90-day retention, queryable via KQL).
