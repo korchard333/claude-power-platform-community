@@ -89,6 +89,40 @@ const contactName = row["_primarycontactid_value@OData.Community.Display.V1.Form
 const choices = await dataApi.getChoices("account-statecode");
 ```
 
+### ⚠️ Foreign Key Columns Must Be Explicitly Selected
+
+The DataAPI does NOT automatically return foreign key (`_*_value`) columns. You must explicitly include them in `select`:
+
+```typescript
+// WRONG — _ds_engagementid_value will be undefined
+const result = await dataApi.queryTable("ds_timeentry", {
+  select: ["ds_date", "ds_duration"],
+});
+
+// CORRECT — explicitly include lookup value columns
+const result = await dataApi.queryTable("ds_timeentry", {
+  select: ["ds_date", "ds_duration", "_ds_engagementid_value", "_ds_teammemberid_value"],
+});
+```
+
+Formatted value annotations (e.g., `@OData.Community.Display.V1.FormattedValue`) ARE returned automatically when the `_value` column is selected — no extra work needed for display names.
+
+### Foreign Key Values Use `/entity(guid)` Format
+
+Foreign key values are returned in `/entity(guid)` format (e.g., `/ds_engagement(a1b2c3d4-...)`), NOT as plain GUIDs. An `extractGuid()` helper is required to match against primary keys:
+
+```typescript
+function extractGuid(fkValue: string | null | undefined): string | null {
+  if (!fkValue) return null;
+  const match = fkValue.match(/\(([0-9a-f-]{36})\)/i);
+  return match ? match[1] : fkValue;
+}
+
+// Usage: match foreign key to primary key
+const engagementId = extractGuid(timeEntry._ds_engagementid_value);
+if (engagementId === engagement.ds_engagementid) { /* match */ }
+```
+
 **DataAPI rules:**
 - Only use `dataApi` when TableRegistrations are provided
 - Entity logical names: singular lowercase (`"account"` not `"accounts"`)
@@ -157,6 +191,62 @@ const translate = (key: string): string =>
 - **Page-level functions** (nav, search, filters) go in header opposite the title
 - **Responsive breakpoints:** 320px, 480px, 768px, 1024px, 1440px; mobile-first; relative units
 - **Navigation:** Fluent UI V9 Tabs or Breadcrumbs — no React Router
+
+### CSS Bar Charts: Percentage Heights Need Fixed-Height Parents
+
+For bar charts using percentage heights (without d3): the parent container must have a **fixed `height`** (not `flex: 1`), and child bar elements must NOT have `flex: 1` (it overrides `height`):
+
+```typescript
+const useStyles = makeStyles({
+  barContainer: { height: "200px", display: "flex", alignItems: "flex-end", gap: tokens.spacingHorizontalS },
+  bar: { width: "100%", /* NOT flex: 1 */ backgroundColor: tokens.colorBrandBackground },
+});
+
+// Set height as inline style (dynamic value)
+<div className={styles.bar} style={{ height: `${percentage}%` }} />
+```
+
+Pure CSS bar charts work well for simple use cases. Use d3 only for complex interactive visualizations.
+
+## Date Handling in Genux Pages
+
+### ⚠️ Never Compare Locale Dates with ISO Dates
+
+`toLocaleDateString()` produces locale-specific strings (e.g., `"4/04/2026"`) that fail string comparison against ISO dates (`"2026-03-30"`). Always maintain separate date representations:
+
+```typescript
+// Store both formats when you need dates for display AND logic
+interface ProcessedEntry {
+  displayDate: string;   // toLocaleDateString() — for rendering
+  isoDate: string;       // toISOString().slice(0, 10) — for comparisons/filters
+}
+
+// WRONG — comparing locale string to ISO string always fails
+const thisWeek = entries.filter(e => e.displayDate >= weekStartISO);
+
+// CORRECT — compare ISO to ISO
+const thisWeek = entries.filter(e => e.isoDate >= weekStartISO);
+```
+
+Also see the UTC+ timezone note in `code-apps/architecture.md` — use `setHours(12, 0, 0, 0)` (noon) not midnight to keep dates stable across timezones.
+
+## DataGrid Patterns
+
+### useMemo Dependencies for Column Definitions
+
+When `useMemo` callbacks reference external reactive values, those values **MUST** be in the dependency array. An empty deps array captures the initial (empty) values:
+
+```typescript
+// WRONG — empty deps captures initial empty map, columns never update
+const columns = useMemo(() => [
+  createTableColumn({ columnId: "hours", renderCell: (item) => hoursByEngagement.get(item.id) ?? "—" }),
+], []); // ← stale closure: hoursByEngagement is always the initial empty Map
+
+// CORRECT — include computed data in deps
+const columns = useMemo(() => [
+  createTableColumn({ columnId: "hours", renderCell: (item) => hoursByEngagement.get(item.id) ?? "—" }),
+], [hoursByEngagement]); // ← re-creates columns when data updates
+```
 
 ## Accessibility
 

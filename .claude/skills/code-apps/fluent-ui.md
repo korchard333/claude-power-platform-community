@@ -58,6 +58,33 @@ FluentProviders can nest — inner providers override outer theme tokens. Use th
 
 `Dialog`, `Tooltip`, `Menu`, and `Popover` render via React Portal (outside the DOM tree). They automatically inherit the nearest FluentProvider context. If a portal component renders without a FluentProvider ancestor, it loses all theming — tokens revert to browser defaults.
 
+### ⚠️ Custom Portals (createPortal) Need Their Own FluentProvider
+
+When using React `createPortal` to render content to `document.body` (e.g., to escape `overflow: hidden` clipping on parent containers), the portaled content is **outside** the FluentProvider React context. Fluent UI components inside will appear unstyled/transparent.
+
+**Fix:** Wrap portaled content in its own `<FluentProvider>`:
+
+```tsx
+import { createPortal } from "react-dom";
+import { FluentProvider, webLightTheme } from "@fluentui/react-components";
+
+function MyPopover({ children }: { children: React.ReactNode }) {
+  return createPortal(
+    <FluentProvider theme={webLightTheme} style={{ display: "contents" }}>
+      <div style={{ position: "fixed", top: 100, left: 100, zIndex: 1000 }}>
+        {children}
+      </div>
+    </FluentProvider>,
+    document.body
+  );
+}
+```
+
+**Key details:**
+- Use `display: 'contents'` on FluentProvider to avoid layout interference
+- Use **inline styles** (not `makeStyles` tokens) for the fixed-position container shell — token resolution is unreliable outside the main provider tree
+- Built-in Fluent portal components (`Dialog`, `Menu`, `Popover`, `Tooltip`) handle this automatically — only `createPortal` needs manual wrapping
+
 ---
 
 ## Theme Customization

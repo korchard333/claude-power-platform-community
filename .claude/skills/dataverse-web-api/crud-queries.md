@@ -209,3 +209,32 @@ Content-Type: application/json
   "@odata.id": "https://org.api.crm.dynamics.com/api/data/v9.2/accounts(guid2)"
 }
 ```
+
+---
+
+## Record Status Operations
+
+### ⚠️ Cannot Create Records with Inactive Status Directly
+
+You cannot create a record directly into an Inactive state (`statecode: 1`). Dataverse rejects the status code because it maps to an inactive statecode, and records must be created Active first.
+
+**Two-step pattern for records that need an Inactive status reason:**
+
+```python
+# Step 1: Create with default Active status
+record_id = api_post(f"{entity_set}", {
+    f"{prefix}_name": "Completed Deliverable",
+    # Do NOT set statuscode to an Inactive value here
+})
+
+# Step 2: Deactivate with the desired status reason
+api_patch(f"{entity_set}({record_id})", {
+    "statecode": 1,
+    "statuscode": 720601  # e.g., "Delivered" — must map to statecode 1
+})
+```
+
+This applies to all status reasons mapped to Inactive statecode. The mapping between statecode and statuscode is defined in the table's status column metadata — query it via:
+```http
+GET /api/data/v9.2/EntityDefinitions(LogicalName='contoso_deliverable')/Attributes(LogicalName='statuscode')/Microsoft.Dynamics.CRM.StatusAttributeMetadata?$expand=OptionSet($select=Options)
+```

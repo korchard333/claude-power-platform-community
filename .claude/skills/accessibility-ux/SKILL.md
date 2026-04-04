@@ -31,7 +31,7 @@ The detailed content (complete payloads, XML templates, working examples, edge-c
 
 - Using `<div>` or `<span>` as interactive elements (buttons, links) — not keyboard accessible, not announced by screen readers. Use semantic `<button>` and `<a>` elements instead.
 - Adding `role="button"` to a `<div>` instead of using `<button>` — you then need to manually handle Enter, Space, focus, and disabled states. Native elements get these for free.
-- Color as the only indicator of state (error = red, success = green) — invisible to colorblind users. Always pair color with icons, text, or patterns.
+- Color as the only indicator of state (error = red, success = green) — invisible to colorblind users. Always pair color with icons, text, or patterns. **All color-coded states must have a visible legend.** Users will guess meanings based on common conventions (yellow = warning/draft, red = error). If your color means something domain-specific (e.g., yellow = non-billable), make it explicit with a legend or label — don't rely on color alone.
 - Missing skip-to-main-content link — keyboard users must tab through the entire navigation on every page. Add a visually-hidden skip link as the first focusable element.
 - Placeholder text as the only label — disappears on input, not reliably announced by screen readers. Always use a visible `<label>` element.
 - Auto-playing animations without respecting `prefers-reduced-motion` — causes motion sickness for vestibular disorder users. Wrap all animations in a media query check.
