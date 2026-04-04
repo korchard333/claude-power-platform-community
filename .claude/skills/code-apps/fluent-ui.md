@@ -85,6 +85,8 @@ function MyPopover({ children }: { children: React.ReactNode }) {
 - Use **inline styles** (not `makeStyles` tokens) for the fixed-position container shell — token resolution is unreliable outside the main provider tree
 - Built-in Fluent portal components (`Dialog`, `Menu`, `Popover`, `Tooltip`) handle this automatically — only `createPortal` needs manual wrapping
 
+> **MS Learn reference:** [Style components with modern theming — FAQ](https://learn.microsoft.com/power-apps/developer/component-framework/fluent-modern-theming#faq) confirms: *"Fluent v9 controls that rely on the React Portal need to be rewrapped in the theme provider to ensure styling is properly applied."*
+
 ---
 
 ## Theme Customization

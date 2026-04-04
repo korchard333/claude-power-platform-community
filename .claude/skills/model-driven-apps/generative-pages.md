@@ -109,6 +109,8 @@ Formatted value annotations (e.g., `@OData.Community.Display.V1.FormattedValue`)
 
 ### Foreign Key Values Use `/entity(guid)` Format
 
+> Discovered by examining DataAPI runtime behaviour — not officially documented by Microsoft. May change in platform updates.
+
 Foreign key values are returned in `/entity(guid)` format (e.g., `/ds_engagement(a1b2c3d4-...)`), NOT as plain GUIDs. An `extractGuid()` helper is required to match against primary keys:
 
 ```typescript
